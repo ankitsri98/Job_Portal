@@ -1,0 +1,59 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fas fa-user-plus"></i> Posting A job
+      </h1>
+      <%- include('partials/messages'); %>
+      <form action="/recruiter/dashboard/add" method="POST">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="name"
+            id="name"
+            name="company_name"
+            class="form-control"
+            placeholder="Enter Name"
+            value="<%= typeof name != 'undefined' ? name : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="field">Field</label>
+          <input
+            type="text"
+            id="field"
+            name="post"
+            class="form-control"
+            placeholder="Enter field"
+            value="<%= typeof field != 'undefined' ? field : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="requirement">requirement</label>
+          <input
+            type="text"
+            id="requirement"
+            name="requirement"
+            class="form-control"
+            placeholder="Enter requirement"
+            value="<%= typeof requirement != 'undefined' ? requirement : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="eligible">eligible</label>
+          <input
+            type="text"
+            id="eligible"
+            name="eligible"
+            class="form-control"
+            placeholder="Create eligible"
+            value="<%= typeof eligible != 'undefined' ? eligible : '' %>"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Post
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
