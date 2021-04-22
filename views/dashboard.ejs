@@ -1,0 +1,27 @@
+
+  
+  
+  <body>
+    <h1 class="mt-4">User Dashboard</h1>
+    <p class="lead mb-3">Welcome</p>
+    <a href="/users/logout" class="btn btn-secondary">Logout</a>
+    
+  <div class="Jobs content">
+    <h2>All Jobs</h2>
+
+    <% if (jobs.length > 0) { %>
+      <% jobs.forEach(Job => { %>
+          <h3 class="title"><%= Job.company_name %></h3>
+          <p class="post"><%= Job.post %></p>
+          <p class="requirement"><%= Job.requirement %></p>
+          <p class="eligible"><%= Job.eligible %></p>
+          <a href="/user/dashboard/apply/<%= Job._id %>" class="btn btn-secondary">apply</a>
+      <% }) %>
+    <% } else { %>
+      <p>There are no Jobs to display...</p>
+    <% } %>
+    
+  </div>
+</body>
+
+

@@ -1,0 +1,26 @@
+<html lang="en">
+  <body>
+    <h1 class="mt-4">Recruiter Dashboard</h1>
+    <p class="lead mb-3">Welcome</p>
+    <a href="/recruiter/logout" class="btn btn-secondary">Logout</a>
+    <a href="/recruiter/dashboard/add" class="btn btn-secondary">Add a Job</a>
+      <h2>All Jobs</h2>
+  
+      <% if (apply.length > 0) { %>
+        <% apply.forEach(job => { %>
+            <h3 class="title"><%= job.name %></h3>
+            <p class="email"><%= job.email %></p>
+            <p class="contact"><%= job.contact_no %></p>
+            <p class="skills"><%= job.skills %></p>
+            <p class="college"><%= job.college %></p>
+            <p class="applied"><%= job.applied %></p>
+        <% }) %>
+      <% } else { %>
+        <p>There Are No Candidate Who Has Applied Till Now.</p>
+      <% } %>
+      
+    </div>
+  </body>
+  </html>
+  
+  

@@ -1,0 +1,83 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fas fa-user-plus"></i> Apply For The Job
+      </h1>
+      <%- include('partials/messages'); %>
+      <form action="/user/dashboard/apply" method="POST">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input
+            type="name"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Enter Name"
+            value="<%= typeof name != 'undefined' ? name : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter Email"
+            value="<%= typeof email != 'undefined' ? email : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="contact">contact_no</label>
+          <input
+            type="Number"
+            id="contact_no"
+            name="contact_no"
+            class="form-control"
+            placeholder="Enter contact_no"
+            value="<%= typeof contact_no!= 'undefined' ? contact_no : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="college">college</label>
+          <input
+            type="text"
+            id="college"
+            name="college"
+            class="form-control"
+            placeholder="Create college"
+            value="<%= typeof college != 'undefined' ? college : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="skills">skills</label>
+          <input
+            type="text"
+            id="skills"
+            name="skills"
+            class="form-control"
+            placeholder="Confirm skills"
+            value="<%= typeof skills != 'undefined' ? skills : '' %>"
+          />
+        </div>
+        <div class="form-group">
+          <label for="applied">applied</label>
+          <input
+            type="hidden"
+            id="applied"
+            name="applied"
+            class="form-control"
+            placeholder="Confirm applied"
+            
+            value="<%= applied %>"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Apply to this 
+        </button>
+      </form>
+      
+    </div>
+  </div>
+</div>
