@@ -2,6 +2,7 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const rpassport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 
@@ -9,6 +10,7 @@ const app = express();
 
 // Passport Config
 require('./config/passport')(passport);
+require('./config/rpassport')(rpassport);
 
 // DB Config
 const db = require('./config/keys').MongoURI;
@@ -61,11 +63,13 @@ app.use(function(req, res, next) {
 
 
 //ROUTES
-app.use('/',require('./routes/index'));
-app.use('/users',require('./routes/user'));
-app.use('/recruiter',require('./routes/recruiter'));
+app.use('/',require('./routes/index.js'));
+
+app.use('/users',require('./routes/user.js'));
+app.use('/recruiter',require('./routes/recruiter.js'));
 app.use('/recruiter/dashboard',require('./routes/job.js'));
-app.use('/user/dashboard',require('./routes/apply'));
+app.use('/user/dashboard',require('./routes/apply.js'));
+
 
 app.get('/home',(req,res)=>{
   res.render('front');
