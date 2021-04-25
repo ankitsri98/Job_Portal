@@ -2,17 +2,31 @@ const express =require('express');
 const router =express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { forwardAuthenticated } = require('../config/auth');
+const { ensureAuthenticated , forwardAuthenticated } = require('../config/auth');
 // Load User model
 const Apply = require('../model/applyjob');
+const Job = require('../model/jobpost');
+//router.get('/apply', forwardAuthenticated, (req,res)=>res.render('applys'));
 
-router.get('/apply', forwardAuthenticated, (req,res)=>res.render('applys'));
+
+router.get('/apply/:id', ensureAuthenticated , (req,res)=>{
+  //console.log('enterrrrrrr');
+  const id=req.params.id;
+  Job.findById(id)
+    .then(result=>{
+      //console.log('asdadasd');
+      res.render('applys',{applied: id});
+    })
+    .catch(err=>{
+      console.log(err);
+    });
+});
 
 router.post('/apply', (req, res) => {
-  const { name, email, contact_no,  college , skills } = req.body;
+  const { name, email, contact_no,  college , skills, applied } = req.body;
   let errors = [];
-
-  if (!name || !email || !contact_no || !college || !skills) {
+  console.log(applied);
+  if (!name || !email || !contact_no || !college || !skills || !applied) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -28,11 +42,12 @@ router.post('/apply', (req, res) => {
       email,
       contact_no,
       college,
-      skills
+      skills,
+      applied
     });
   } else {
     //validating 
-    Apply.findOne({ email: email }).then(user => {
+    Apply.findOne({ email: email , applied: applied }).then(user => {
       if (user) {
         //console.log('already found');
         errors.push({ msg: 'Already Applied For this Job' });
@@ -42,7 +57,8 @@ router.post('/apply', (req, res) => {
           email,
           contact_no,
           college,
-          skills
+          skills,
+          applied
         });
       } else {
         //console.log('okay');
@@ -51,7 +67,8 @@ router.post('/apply', (req, res) => {
           email,
           contact_no,
           college,
-          skills
+          skills,
+          applied
         });
         //console.log(newUser);
         newUser
