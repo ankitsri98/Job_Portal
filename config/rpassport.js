@@ -1,12 +1,11 @@
-const passport = require('passport');
+const rpassport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
-
+const recruit= require('../model/recruiter');
 // Load User model
-const recruit = require('../model/recruiter');
 
-module.exports = function(passport) {
-  passport.use(
+module.exports = function(rpassport) {
+  rpassport.use(
     new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
       // Match user
       recruit.findOne({
@@ -29,11 +28,11 @@ module.exports = function(passport) {
     })
   );
 
-  passport.serializeUser(function(user, done) {
+  rpassport.serializeUser(function(user, done) {
     done(null, user.id);
   });
 
-  passport.deserializeUser(function(id, done) {
+  rpassport.deserializeUser(function(id, done) {
     recruit.findById(id, function(err, user) {
       done(err, user);
     });
