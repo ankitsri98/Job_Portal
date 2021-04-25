@@ -2,6 +2,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 
+
+
 // Load User model
 const User = require('../model/User');
 
@@ -17,6 +19,7 @@ module.exports = function(passport) {
         }
 
         // Match password
+        console.log('email hai');
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) throw err;
           if (isMatch) {
@@ -25,11 +28,13 @@ module.exports = function(passport) {
             return done(null, false, { message: 'Password incorrect' });
           }
         });
+        console.log('password is right');
       });
     })
   );
 
   passport.serializeUser(function(user, done) {
+    console.log('saving cookiew');
     done(null, user.id);
   });
 
