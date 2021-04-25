@@ -4,15 +4,16 @@ module.exports = {
       return next();
     }
     req.flash('error_msg', 'Please log in to view that resource');
-    res.redirect('/users/login');
+    res.redirect('/');
   },
   forwardAuthenticated: function(req, res, next) {
-    //console.log('control reached');
+    console.log('control reached');
     if (!req.isAuthenticated()) {
-      //console.log('control reached as ');
+      console.log('control reached as ');
+      //means where this func. is used if control reaches to next route to execute
       return next();
     }
-    res.redirect('/dashboard');      
+    res.redirect('/users/dashboard');      
   }
 };
 //Is done so that typing any route directly should not land us at that page
