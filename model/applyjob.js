@@ -22,7 +22,7 @@ const ApplySchema = new mongoose.Schema({
     required: true
   },
   applied:{
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     required: false
   }
 });
