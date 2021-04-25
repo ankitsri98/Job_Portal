@@ -2,23 +2,23 @@ const express =require('express');
 const router =express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { forwardAuthenticated } = require('../config/auth');
+const { ensureAuthenticated , forwardAuthenticated } = require('../config/auth');
 // Load User model
 const User = require('../model/User');
-//const { forwardAuthenticated } = require('../config/auth');
 const Job = require('../model/jobpost');
 
 //LOGIN
 router.get('/login', forwardAuthenticated, (req,res)=>res.render('login'));
 
 
-router.get('/dashboard', forwardAuthenticated, (req,res)=>{
+router.get('/dashboard', ensureAuthenticated, (req,res)=>{
   Job.find().then((result)=>{
+    //console.log(result);
     res.render('dashboard',{jobs: result})
   })
   .catch((err)=>{
     console.log(err);
-  })
+  }) 
 });
 
 //REGISTER
@@ -80,6 +80,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now registered and can log in'
                 );
+                console.log('new user came');
                 res.redirect('/users/login');
               })
               .catch(err => console.log(err));
@@ -92,12 +93,51 @@ router.post('/register', (req, res) => {
 
 // Login
 router.post('/login', (req, res, next) => {
+  passport.authenticate('local',
+  (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    console.log('okkkkkkkkkayr');
+    if (!user) {
+      return res.redirect('/users/login');
+    }
+    console.log('okayr');
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      console.log('redirect to user dash');
+      return res.redirect('/users/dashboard');
+    });
+
+  })(req, res, next);
+});
+/*
+router.post('/login', (req, res) => {
+  console.log('okayr');
   passport.authenticate('local', {
     successRedirect: '/users/dashboard',
     failureRedirect: '/users/login',
     failureFlash: true
-  })(req, res, next);
-});
+  })
+});*/
+/*router.post('/login',(req, res) => {
+  const {email,password}  = req.body;
+  //console.log({email,password});
+  User.findOne({ email: email }).then(async (user) => {
+    //console.log(user);
+  if(user && await bcrypt.compare(password, user.password)){
+    res.redirect('/users/dashboard');
+  }
+else{
+  req.flash(
+    'error_msg',
+    'Not Registered Or Put Correct Credentials'
+  );
+  res.redirect('/users/login');
+}}).catch(err => console.log(err));
+});*/
 
 // Logout
 router.get('/logout', (req, res) => {
