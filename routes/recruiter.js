@@ -2,18 +2,33 @@ const express =require('express');
 const router =express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { forwardAuthenticated } = require('../config/auth');
+const { EnsureAuthenticated , ForwardAuthenticated } = require('../config/rauth');
 // Load User model
 const recruit = require('../model/recruiter');
 //const { forwardAuthenticated } = require('../config/auth');
 const Apply = require('../model/applyjob');
+const Job = require('../model/jobpost');
 
 //LOGIN
-router.get('/login', forwardAuthenticated, (req,res)=>res.render('rlogin'));
+router.get('/login', ForwardAuthenticated, (req,res)=>res.render('rlogin'));
 
-router.get('/dashboard', forwardAuthenticated, (req,res)=>{
-  Apply.find().then((result)=>{
-    res.render('rdashboard',{apply: result})
+router.get('/dashboard', EnsureAuthenticated,  (req,res)=>{
+  Apply.find().then( async (results)=>{
+    var arr=[];
+    results.forEach(result=>{
+      
+      Job.findById(result.applied).then(x=>{
+        //console.log("fffrf",x);
+        arr.push(x.company_name);
+        
+      })
+      console.log(arr);
+    });
+    
+    // result.applied
+    // jobs.findone(for result.applied)
+    // job.companyname
+    res.render('rdashboard',{apply: results,companynames:arr});
   })
   .catch((err)=>{
     console.log(err);
@@ -21,7 +36,7 @@ router.get('/dashboard', forwardAuthenticated, (req,res)=>{
 });
 
 //REGISTER
-router.get('/register',forwardAuthenticated,(req,res)=>res.render('rregister'));
+router.get('/register',ForwardAuthenticated,(req,res)=>res.render('rregister'));
 
 // Register
 router.post('/register', (req, res) => {
@@ -82,6 +97,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now registered and can log in'
                 );
+                console.log('new recruiter came ');
                 res.redirect('/recruiter/login');
               })
               .catch(err => console.log(err));
@@ -95,15 +111,48 @@ router.post('/register', (req, res) => {
 
 
 // Login
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local',
+  (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    console.log('okkkkkkkkkayr');
+    if (!user) {
+      req.flash(
+        'error_msg',
+        'You Are Not Registered Yet'
+      );
+      return res.redirect('/recruiter/login');
+    }
+    console.log('okayr');
+    req.logIn(user, function(err) {
+      if (err) {
+        return next(err);
+      }
+      console.log('reached to be directed');
+      return res.redirect('/recruiter/dashboard');
+    });
+
+  })(req, res, next);
+});
+/*
 router.post('/login',(req, res) => {
   const {email,password}  = req.body;
   //console.log({email,password});
   recruit.findOne({ email: email }).then(async (user) => {
 
-  if(await bcrypt.compare(password, user.password)){
+  if(user && await bcrypt.compare(password, user.password)){
     res.redirect('/recruiter/dashboard');
+  }
+  else{
+    req.flash(
+      'error_msg',
+      'Not Registered Or Put Correct Credentials'
+    );
+    res.redirect('/recruiter/login');
   }}).catch(err => console.log(err));
-});
+});*/
 // Logout
 router.get('/logout', (req, res) => {
   req.logout();
