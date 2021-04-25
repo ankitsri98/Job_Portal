@@ -2,16 +2,16 @@ const express =require('express');
 const router =express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { forwardAuthenticated } = require('../config/auth');
+const { ensureAuthenticated , forwardAuthenticated } = require('../config/auth');
 // Load User model
 const Job = require('../model/jobpost');
 
-router.get('/add',forwardAuthenticated,(req,res)=>res.render('jobs'));
+router.get('/add',ensureAuthenticated ,(req,res)=>res.render('jobs'));
 
 
 // Register
 router.post('/add', (req, res) => {
-  console.log('xxx');
+  //console.log('xxx');
   const { company_name, post, requirement, eligible } = req.body;
   let errors = [];
 
@@ -45,7 +45,7 @@ router.post('/add', (req, res) => {
               'success_msg',
               'You have now posted a job Successfully'
             );
-            console.log('ewaqe');
+            //console.log('ewaqe');
             res.redirect('/recruiter/dashboard');
           })
           .catch(err => console.log(err));
